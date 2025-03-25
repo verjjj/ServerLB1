@@ -17,9 +17,9 @@ return new class extends Migration
             $table->integer('expiration');
         });
 
-        Schema::create('cache', function (Blueprint $table) {
-            $table->string('key', 191)->primary(); // Изменить 255 на 191 (или меньшее значение)
-            $table->mediumText('value');
+        Schema::create('cache_locks', function (Blueprint $table) {
+            $table->string('key')->primary();
+            $table->string('owner');
             $table->integer('expiration');
         });
     }
