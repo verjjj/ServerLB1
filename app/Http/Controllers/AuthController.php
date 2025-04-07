@@ -22,6 +22,14 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        $maxTokens = 4;
+        if ($user->tokens()->count() >= $maxTokens) {
+            $oldestToken = $user->tokens()
+                ->oldest('created_at')
+                ->first();
+
+            $oldestToken->delete();
+        }
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json(new LoginResourceDTO($token), 200);
