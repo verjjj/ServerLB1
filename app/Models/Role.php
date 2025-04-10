@@ -14,6 +14,8 @@ class Role extends Model
         'name',
         'code',
         'description',
+        'created_at',
+        'updated_at'
     ];
 
     public function permissions()
