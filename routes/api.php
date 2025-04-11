@@ -5,8 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:get-list-roles');
+});
 
-Route::apiResource('/roles', RoleController::class)->middleware(['auth:sanctum', 'permission:manage-roles']);
+//Route::apiResource('/roles', RoleController::class)->middleware(['auth:sanctum', 'permission:manage-roles']);
 Route::apiResource('/permissions', PermissionController::class);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register'])->middleware('guest');
@@ -17,7 +20,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/out_all', [AuthController::class, 'logoutAll']);
     Route::post('/auth/change_password', [AuthController::class, 'changePassword']);
 });
+
 Route::middleware(['auth:sanctum', 'permission:no-permissions'])->group(function () {
     Route::get('/restricted', [PermissionController::class, 'restricted']);
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/permissions/{id}/restore', [PermissionController::class, 'restore'])
+        ->middleware('permission:restore-permission');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/permissions/{id}/force-delete', [PermissionController::class, 'forceDelete'])
+        ->middleware('permission:force-delete-permission');
+});
