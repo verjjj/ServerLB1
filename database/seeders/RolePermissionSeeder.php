@@ -14,7 +14,9 @@ class RolePermissionSeeder extends Seeder
         $user = Role::where('code', 'user')->first();
         $guest = Role::where('code', 'guest')->first();
 
-        $admin->permissions()->attach(Permission::all());
+        $allPermissions = Permission::where('code', '!=', 'no-permissions')->get();
+
+        $admin->permissions()->sync($allPermissions);
 
         $userPermissions = Permission::whereIn('code', [
             'get-list-users',
@@ -23,7 +25,9 @@ class RolePermissionSeeder extends Seeder
         ])->get();
         $user->permissions()->attach($userPermissions);
 
-        $guestPermissions = Permission::where('code', 'get-list-users')->get();
+        $guestPermissions = Permission::where('code', 'no-permissions')->get();
         $guest->permissions()->attach($guestPermissions);
+
+
     }
 }

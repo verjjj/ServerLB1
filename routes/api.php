@@ -17,3 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/out_all', [AuthController::class, 'logoutAll']);
     Route::post('/auth/change_password', [AuthController::class, 'changePassword']);
 });
+Route::middleware(['auth:sanctum', 'permission:no-permissions'])->group(function () {
+    Route::get('/restricted', [PermissionController::class, 'restricted']);
+});
+

@@ -27,6 +27,8 @@ class PermissionSeeder extends Seeder
             ['name' => 'Create permission', 'code' => 'create-permission'],
             ['name' => 'Update permission', 'code' => 'update-permission'],
             ['name' => 'Delete permission', 'code' => 'delete-permission'],
+
+            ['name' => 'No permissions', 'code' => 'no-permissions'],
         ];
 
         foreach ($permissions as $permission) {

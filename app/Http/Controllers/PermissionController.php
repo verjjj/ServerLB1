@@ -19,18 +19,15 @@ class PermissionController extends Controller
     public function store(StorePermissionRequest $request): JsonResponse
     {
         $permission = Permission::create($request->toDTO()->toArray());
-        return response()->json($permission, 201);
+        return response()->json([
+            'id' => $permission->id,
+            'name' => $permission->name,
+            'description' => $permission->description,
+        ], 201);
     }
 
     public function show(Permission $permission): JsonResponse
     {
-        // Проверка прав доступа
-        if (!auth()->user()->can('view-permission')) {
-            return response()->json([
-                'message' => 'Permission denied: You do not have the required permission to perform this action.'
-            ], 403);
-        }
-
         return response()->json($permission);
     }
 
