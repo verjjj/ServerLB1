@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             RolePermissionSeeder::class,
+
         ]);
 
         User::create([
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('Password123!!'),
             'birthday' => '2002-10-10'
         ]);
+        $this->call([UserRoleSeeder::class ]);
     }
 }
 

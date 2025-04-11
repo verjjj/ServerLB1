@@ -9,6 +9,7 @@ class RouteServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+
         $this->routes(function () {
             Route::prefix('api')
                 ->middleware('api')
@@ -17,5 +18,7 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
     }
+    protected $namespace = 'App\\Http\\Controllers';
 }

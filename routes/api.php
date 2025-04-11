@@ -5,8 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 
+
 Route::apiResource('/roles', RoleController::class)->middleware(['auth:sanctum', 'permission:manage-roles']);
-Route::apiResource('/permissions', [PermissionController::class, 'index']);
+Route::apiResource('/permissions', PermissionController::class);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register'])->middleware('guest');
 Route::middleware('auth:sanctum')->group(function () {

@@ -11,19 +11,19 @@ class RoleSeeder extends Seeder
     {
         //сюда код не попадает, исправить
         Role::create([
-            'name' => 'Adminnim',
+            'name' => 'Admin',
             'code' => 'admin',
             'description' => 'Administrator with full access',
         ]);
 
         Role::create([
-            'name' => 'Userres',
+            'name' => 'User',
             'code' => 'user',
             'description' => 'Regular user',
         ]);
 
         Role::create([
-            'name' => 'Guesttse',
+            'name' => 'Guest',
             'code' => 'guest',
             'description' => 'Guest user with limited access',
         ]);
