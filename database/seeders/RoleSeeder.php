@@ -11,7 +11,7 @@ class RoleSeeder extends Seeder
     {
         //сюда код не попадает, исправить
         Role::create([
-            'name' => 'Admin',
+            'name' => 'Adminnim',
             'code' => 'admin',
             'description' => 'Administrator with full access',
         ]);

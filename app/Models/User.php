@@ -43,7 +43,7 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(
             Permission::class,
-            RolePermission::class,
+            RolesPermissions::class,
             'role_id',
             'id',
             'id',

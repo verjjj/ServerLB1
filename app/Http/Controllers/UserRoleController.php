@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\UserRole\UserRoleDTO;
+use App\DTO\Role\RoleDTO;
 use App\Http\Requests\StoreUserRoleRequest;
 use App\Http\Requests\UpdateUserRoleRequest;
 use App\Models\UserRole;

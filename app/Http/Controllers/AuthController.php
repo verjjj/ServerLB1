@@ -17,11 +17,12 @@ class AuthController extends Controller
     {
         $credentials = $request->only('username', 'password');
 
-        if (!Auth::attempt($credentials)) {
+        $user = User::where('username', $credentials['username'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $user = Auth::user();
         $maxTokens = 4;
         if ($user->tokens()->count() >= $maxTokens) {
             $oldestToken = $user->tokens()
@@ -30,6 +31,7 @@ class AuthController extends Controller
 
             $oldestToken->delete();
         }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json(new LoginResourceDTO($token), 200);
