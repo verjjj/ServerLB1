@@ -1,10 +1,14 @@
 <?php
-
 namespace App\DTO;
-
-use Illuminate\Support\Collection;
-
 class ChangeLogCollectionDTO
 {
-    public function __construct(public Collection $logs) {}
+    public function __construct(
+        public array $logs,
+    ) {}
+    public function toArray(): array
+    {
+        return [
+            'logs' => $this->logs,
+        ];
+    }
 }
