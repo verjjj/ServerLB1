@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ChangeLogController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:get-list-roles');
@@ -33,4 +35,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/permissions/{id}/force-delete', [PermissionController::class, 'forceDelete'])
         ->middleware('permission:force-delete-permission');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::post('/users/{id}/restore', [UserController::class, 'restore']);
+    Route::get('/users/{id}/history', [ChangeLogController::class, 'getHistory']);
+    Route::post('/logs/{id}/rollback', [ChangeLogController::class, 'rollback']);
 });
