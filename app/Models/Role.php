@@ -33,4 +33,13 @@ class Role extends Model
             ->withPivot('deleted_at')
             ->wherePivotNull('deleted_at');
     }
+
+    public static function create(array $data): Role
+    {
+        if (self::where('name', $data['name'])->exists()) {
+            throw new \InvalidArgumentException("Role with name '{$data['name']}' already exists.");
+        }
+
+        return parent::create($data);
+    }
 }

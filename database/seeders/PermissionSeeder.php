@@ -22,7 +22,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Update role', 'code' => 'update-role'],
             ['name' => 'Delete role', 'code' => 'delete-role'],
 
-            ['name' => 'Get permission list', 'code' => 'get-list-permissions'],
+            ['name' => 'Get permission list', 'code' => 'get-list-permission'],
             ['name' => 'Read permission', 'code' => 'read-permission'],
             ['name' => 'Create permission', 'code' => 'create-permission'],
             ['name' => 'Update permission', 'code' => 'update-permission'],

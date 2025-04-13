@@ -1,70 +1,137 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use App\DTO\User\UserDTO;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\DTO\Role\RoleDTO;
+use App\DTO\Role\RoleCollectionDTO;
 use Illuminate\Http\JsonResponse;
-
 class UserController extends Controller
 {
     public function index(): JsonResponse
     {
-        $users = User::with(['roles', 'permissions'])->get();
-        return response()->json($users);
+        if (!auth()->user()->hasPermission('get-list-user')) {
+            return response()->json(['message' => 'Permission denied: get-list-user'], 403);
+        }
+        $users = User::with('roles')->get();
+        return response()->json(new RoleCollectionDTO(
+            $users->map(function ($user) {
+                return new UserDTO(
+                    $user->id,
+                    $user->username,
+                    $user->email,
+                    $user->birthday,
+                    $user->roles->map(fn($role) => [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                        'code' => $role->code,
+                    ])
+                );
+            })
+        ));
     }
-
     public function store(StoreUserRequest $request): JsonResponse
     {
-        $user = User::create($request->toDTO()->toArray());
-
-        if ($request->has('roles')) {
-            $user->roles()->attach($request->input('roles'));
+        if (!auth()->user()->hasPermission('create-user')) {
+            return response()->json(['message' => 'Permission denied: create-user'], 403);
         }
-
-        if ($request->has('permissions')) {
-            $user->permissions()->attach($request->input('permissions'));
+        \Log::info('Creating user', ['data' => $request->all()]);
+        $user = User::create(array_merge($request->validated(), [
+            'password' => bcrypt($request->input('password')),
+            'created_by' => auth()->id(),
+        ]));
+        \Log::info('User created', ['user' => $user]);
+        return response()->json(new RoleDTO(
+            $user->id,
+            $user->username,
+            $user->email,
+            $user->birthday,
+            []
+        ), 201);
+    }
+    public function show($id): JsonResponse
+    {
+        if (!auth()->user()->hasPermission('read-user')) {
+            return response()->json(['message' => 'Permission denied: read-user'], 403);
         }
-
-        return response()->json($user->load(['roles', 'permissions']), 201);
-    }
-
-    public function show(User $user): JsonResponse
-    {
-        return response()->json($user->load(['roles', 'permissions']));
-    }
-
-    public function update(UpdateUserRequest $request, User $user): JsonResponse
-    {
-        $user->update($request->toDTO()->toArray());
-
-        if ($request->has('roles')) {
-            $user->roles()->sync($request->input('roles'));
+        $user = User::with('roles')->find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
         }
-
-        if ($request->has('permissions')) {
-            $user->permissions()->sync($request->input('permissions'));
+        return response()->json(new RoleDTO(
+            $user->id,
+            $user->username,
+            $user->email,
+            $user->birthday,
+            $user->roles->map(fn($role) => [
+                'id' => $role->id,
+                'name' => $role->name,
+                'code' => $role->code,
+            ])->toArray()
+        ));
+    }
+    public function update(UpdateUserRequest $request, $id): JsonResponse
+    {
+        if (!auth()->user()->hasPermission('update-user')) {
+            return response()->json(['message' => 'Permission denied: update-user'], 403);
         }
-
-        return response()->json($user->fresh()->load(['roles', 'permissions']));
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        $user->update($request->validated());
+        return response()->json(new RoleDTO(
+            $user->id,
+            $user->username,
+            $user->email,
+            $user->birthday,
+            $user->roles->map(fn($role) => [
+                'id' => $role->id,
+                'name' => $role->name,
+                'code' => $role->code,
+            ])->toArray()
+        ));
     }
-
-    public function destroy(User $user): JsonResponse
+    public function destroy($userId): JsonResponse
     {
-        $this->authorize('delete-user', $user);
-        $user->delete();
-        return response()->json(null, 204);
+        if (!auth()->user()->hasPermission('delete-user')) {
+            return response()->json(['message' => 'Permission denied: delete-user'], 403);
+        }
+        $user = User::withTrashed()->find($userId);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        $user->forceDelete();
+        return response()->json(['message' => 'User permanently deleted']);
     }
-
-    public function attachRoles(User $user): JsonResponse
+    public function softDelete($id): JsonResponse
     {
-        // Реализация прикрепления ролей
+        if (!auth()->user()->hasPermission('delete-user')) {
+            return response()->json(['message' => 'Permission denied: delete-user'], 403);
+        }
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        $user->update([
+            'deleted_at' => now(),
+            'deleted_by' => auth()->id(),
+        ]);
+        return response()->json(['message' => 'User softly deleted']);
     }
-
-    public function detachRoles(User $user): JsonResponse
+    public function restore($id): JsonResponse
     {
-         // Реализация открепления ролей
+        if (!auth()->user()->hasPermission('restore-user')) {
+            return response()->json(['message' => 'Permission denied: restore-user'], 403);
+        }
+        $user = User::withTrashed()->find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+        $user->update([
+            'deleted_at' => null,
+            'deleted_by' => null,
+        ]);
+        return response()->json(['message' => 'User restored']);
     }
 }

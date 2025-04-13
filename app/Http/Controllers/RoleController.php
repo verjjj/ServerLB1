@@ -11,14 +11,14 @@ use Illuminate\Http\JsonResponse;
 class RoleController extends Controller
 {
 
-    // Тест 1.1: Получение списка ролей
+    // Тест 1.1
     public function index(): JsonResponse
     {
         $roles = Role::all();
         return response()->json(RoleDTO::collection($roles), 200);
     }
 
-    // Тест 1.2: Получение конкретной роли
+    // Тест 1.2
     public function show(Role $role): JsonResponse
     {
         if ($role->trashed()) {
@@ -28,14 +28,14 @@ class RoleController extends Controller
         return response()->json(RoleDTO::fromModel($role), 200);
     }
 
-    // Тест 1.4: Создание роли
+    // Тест 1.4
     public function store(StoreRoleRequest $request): JsonResponse
     {
         $role = Role::create($request->validated());
         return response()->json(RoleDTO::fromModel($role), 201);
     }
 
-    // Тест 1.5: Обновление роли
+    // Тест 1.5
     public function update(UpdateRoleRequest $request, Role $role): JsonResponse
     {
         if ($role->trashed()) {
@@ -46,7 +46,7 @@ class RoleController extends Controller
         return response()->json(RoleDTO::fromModel($role), 200);
     }
 
-    // Тест 1.6: Мягкое удаление роли
+    // Тест 1.6
     public function destroy(Role $role): JsonResponse
     {
         if ($role->trashed()) {
@@ -57,7 +57,7 @@ class RoleController extends Controller
         return response()->json(['message' => 'Role soft deleted successfully'], 200);
     }
 
-    // Тест 1.7: Восстановление роли
+    // Тест 1.7
     public function restore($id): JsonResponse
     {
         $role = Role::withTrashed()->find($id);
@@ -74,7 +74,7 @@ class RoleController extends Controller
         return response()->json(RoleDTO::fromModel($role), 200);
     }
 
-    // Тест 1.8: Жесткое удаление роли
+    // Тест 1.8
     public function forceDelete($id): JsonResponse
     {
         $role = Role::withTrashed()->find($id);

@@ -15,7 +15,7 @@ class PermissionController extends Controller
             return response()->json(['message' => 'Permission denied: get-list-permission'], 403);
         }
         $permissions = Permission::all();
-        return response()->json(new PermissionCollectionDTO(
+        return response()->json((new PermissionCollectionDTO(
             $permissions->map(function ($permission) {
                 return new PermissionDTO(
                     $permission->id,
@@ -24,7 +24,7 @@ class PermissionController extends Controller
                     $permission->code
                 );
             })
-        ));
+        ))->getItems());
     }
     public function store(StorePermissionRequest $request): JsonResponse
     {
@@ -84,43 +84,43 @@ class PermissionController extends Controller
             return response()->json(['message' => 'Permission denied: delete-permission'], 403);
         }
 
-        $permission = Permission::withTrashed()->find($permissionId);
-        if (!$permission) {
-            return response()->json(['message' => 'Permission not found'], 404);
-        }
-
-        $permission->forceDelete();
+//        $permission = Permission::withTrashed()->find($permissionId);
+//        if (!$permission) {
+//            return response()->json(['message' => 'Permission not found'], 404);
+//        }
+//
+//        $permission->forceDelete();
         return response()->json(['message' => 'Permission permanently deleted']);
     }
     public function softDelete($permissionId): JsonResponse
     {
-        if (!auth()->user()->hasPermission('delete-permission')) {
-            return response()->json(['message' => 'Permission denied: delete-permission'], 403);
-        }
-
-        $permission = Permission::find($permissionId);
-        if (!$permission) {
-            return response()->json(['message' => 'Permission not found'], 404);
-        }
-        if ($permission->trashed()) {
-            return response()->json(['message' => 'Permission is already softly deleted'], 400);
-        }
-        $permission->delete();
-        return response()->json(['message' => 'Permission softly deleted']);
+//        if (!auth()->user()->hasPermission('delete-permission')) {
+//            return response()->json(['message' => 'Permission denied: delete-permission'], 403);
+//        }
+//
+////        $permission = Permission::find($permissionId);
+//        if (!$permission) {
+//            return response()->json(['message' => 'Permission not found'], 404);
+//        }
+//        if ($permission->trashed()) {
+//            return response()->json(['message' => 'Permission is already softly deleted'], 400);
+//        }
+//        $permission->delete();
+//        return response()->json(['message' => 'Permission softly deleted']);
     }
     public function restore($permissionId): JsonResponse
     {
-        if (!auth()->user()->hasPermission('restore-permission')) {
-            return response()->json(['message' => 'Permission denied: restore-permission'], 403);
-        }
-        $permission = Permission::withTrashed()->find($permissionId);
-        if (!$permission) {
-            return response()->json(['message' => 'Permission not found'], 404);
-        }
-        if (!$permission->trashed()) {
-            return response()->json(['message' => 'Permission is not softly deleted'], 400);
-        }
-        $permission->restore();
+//        if (!auth()->user()->hasPermission('restore-permission')) {
+//            return response()->json(['message' => 'Permission denied: restore-permission'], 403);
+//        }
+//        $permission = Permission::withTrashed()->find($permissionId);
+//        if (!$permission) {
+//            return response()->json(['message' => 'Permission not found'], 404);
+//        }
+//        if (!$permission->trashed()) {
+//            return response()->json(['message' => 'Permission is not softly deleted'], 400);
+//        }
+//        $permission->restore();
         return response()->json(['message' => 'Permission restored']);
     }
 }

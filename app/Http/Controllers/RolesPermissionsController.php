@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\RolesPermissions\RolesPermissionsDTO;
+use App\DTO\Permission\PermissionDTO;
 use App\Http\Requests\StoreRolesPermissionsRequest;
 use App\Http\Requests\UpdateRolesPermissionsRequest;
 use App\Models\RolesPermissions;
