@@ -59,13 +59,13 @@ class User extends Authenticatable
             ->exists();
 
         // Проверка разрешений через роли
-        $rolePermission = $this->roles()
+        $rolesPermissions = $this->roles()
             ->whereHas('permissions', fn($query) =>
             $query->where('code', $permissionCode)
             )
             ->exists();
 
-        return $directPermission || $rolePermission;
+        return $directPermission || $rolesPermissions;
     }
 
 }
