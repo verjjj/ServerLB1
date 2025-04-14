@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             RolePermissionSeeder::class,
+            UserRoleSeeder::class,
 
         ]);
 
@@ -25,13 +27,15 @@ class DatabaseSeeder extends Seeder
             'birthday' => '2002-10-10'
         ]);
 
-        User::create([
+        $user = User::create([
             'username' => 'Adminnim',
             'email' => 'adminnim@example.com',
             'password' => Hash::make('Password123!!'),
             'birthday' => '2002-10-10'
         ]);
         $this->call([UserRoleSeeder::class ]);
+
+
     }
 }
 

@@ -107,4 +107,43 @@ class AuthController extends Controller
         ]);
         return response()->json(['message' => 'Password changed successfully'], 200);
     }
+
+    //тесты не робят. пробуем так
+    public function loginWithRole(Request $request)
+    {
+        // Валидация входных данных
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'role' => 'required|string',
+        ]);
+
+        // Находим пользователя
+        $user = User::where('email', $request->email)->first();
+
+        // Проверяем пароль
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+
+        // Находим роль
+        $roleName = $request->input('role');
+        $role = \Spatie\Permission\Models\Role::where('name', $roleName)->first();
+
+        if (!$role) {
+            return response()->json(['error' => 'Role not found'], 404);
+        }
+
+        // Назначаем роль
+        $user->syncRoles([$role->id]);
+
+        // Генерация токена
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+            'role' => $roleName,
+        ], 200);
+    }
 }

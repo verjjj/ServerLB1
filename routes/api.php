@@ -11,6 +11,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:get-list-roles');
 });
 
+Route::post('/login-with-role', [AuthController::class, 'loginWithRole']);
+
 //Route::apiResource('/roles', RoleController::class)->middleware(['auth:sanctum', 'permission:manage-roles']);
 Route::apiResource('/permissions', PermissionController::class);
 Route::post('/auth/login', [AuthController::class, 'login']);
