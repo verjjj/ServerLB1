@@ -10,23 +10,27 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Support\Facades\Cache;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Authorizable;
+
     protected $fillable = [
         'username',
         'email',
         'password',
         'birthday',
-        'deleted_at'
     ];
+
+    protected $dates = ['deleted_at'];
 
     protected $hidden = [
         'password',
         'remember_token',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
     ];
 
     protected $casts = [
@@ -35,7 +39,7 @@ class User extends Authenticatable
 
     public $timestamps = true;
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_role')
             ->withTimestamps()
@@ -57,6 +61,12 @@ class User extends Authenticatable
 
     public function hasPermission(string $permissionCode): bool
     {
+        $cacheKey = "user_{$this->id}_permission_{$permissionCode}";
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
         // Проверка напрямую назначенных разрешений
         $directPermission = $this->permissions()
             ->where('code', $permissionCode)
@@ -69,7 +79,9 @@ class User extends Authenticatable
             )
             ->exists();
 
-        return $directPermission || $rolesPermissions;
-    }
+        $result = $directPermission || $rolesPermissions;
+        Cache::put($cacheKey, $result, now()->addMinutes(60));
 
+        return $result;
+    }
 }

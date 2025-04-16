@@ -96,43 +96,63 @@ class ChangeLogController extends Controller
     }
     public function restoreEntityState($logId): JsonResponse
     {
+        // Проверка разрешений
         if (!auth()->user()->hasPermission('restore-entity-state')) {
             return response()->json(['message' => 'Permission denied: restore-entity-state'], 403);
         }
+
         try {
             DB::beginTransaction();
+
             $log = ChangeLog::find($logId);
             if (!$log) {
                 return response()->json(['message' => 'Log not found'], 404);
             }
+
             $entityType = $log->entity_type;
             $entityId = $log->entity_id;
             $beforeData = $log->before;
+
             if (!$beforeData) {
                 return response()->json(['message' => 'No previous state available'], 400);
             }
+
             switch ($entityType) {
                 case 'User':
-                    $entity = User::find($entityId);
+                    $entity = User::withTrashed()->find($entityId);
                     break;
                 case 'Role':
-                    $entity = Role::find($entityId);
+                    $entity = Role::withTrashed()->find($entityId);
                     break;
                 case 'Permission':
-                    $entity = Permission::find($entityId);
+                    $entity = Permission::withTrashed()->find($entityId);
                     break;
                 default:
                     return response()->json(['message' => 'Invalid entity type'], 400);
             }
+
             if (!$entity) {
                 return response()->json(['message' => 'Entity not found'], 404);
             }
+
+
+
             $entity->update($beforeData);
+
+            ChangeLog::create([
+                'entity_type' => $entityType,
+                'entity_id' => $entityId,
+                'before' => json_encode($entity->getOriginal()),
+                'after' => json_encode($beforeData),
+                'action' => 'rollback',
+            ]);
+
             DB::commit();
-            return response()->json(['message' => 'Entity restored to previous state']);
+
+            return response()->json(['message' => 'Entity restored to previous state'], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error restoring entity state', ['error' => $e->getMessage()]);
+            \Log::error('Error restoring entity state', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Failed to restore entity state'], 500);
         }
     }
