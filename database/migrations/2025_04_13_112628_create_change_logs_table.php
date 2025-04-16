@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('change_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('entity_type'); // Название сущности (User, Role, Permission)
-            $table->unsignedBigInteger('entity_id'); // ID записи сущности
-            $table->json('before')->nullable(); // Значение до мутации
-            $table->json('after')->nullable(); // Значение после мутации
-            $table->string('action'); // Действие (create, update, delete)
+            $table->string('entity_type');
+            $table->unsignedBigInteger('entity_id');
+            $table->json('before')->nullable();
+            $table->json('after')->nullable();
+            $table->string('action');
             $table->timestamps();
         });
     }

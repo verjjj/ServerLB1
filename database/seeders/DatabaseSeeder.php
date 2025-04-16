@@ -17,22 +17,10 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RolePermissionSeeder::class,
             UserRoleSeeder::class,
+            ChangeLogSeeder::class,
 
         ]);
 
-        User::create([
-            'username' => 'TestUser',
-            'email' => 'testtest@example.com',
-            'password' => Hash::make('Password123!!'),
-            'birthday' => '2002-10-10'
-        ]);
-
-        $user = User::create([
-            'username' => 'Adminnim',
-            'email' => 'adminnim@example.com',
-            'password' => Hash::make('Password123!!'),
-            'birthday' => '2002-10-10'
-        ]);
         $this->call([UserRoleSeeder::class ]);
 
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\User\UserDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -17,7 +16,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
+            'username' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'email', 'max:255', Rule::unique('users')->ignore($this->user)],
             'password' => ['sometimes', 'confirmed', Password::min(8)],
             'roles' => ['sometimes', 'array'],
@@ -27,14 +26,8 @@ class UpdateUserRequest extends FormRequest
         ];
     }
 
-    public function toDTO(): UserDTO
+    public function toDTO()
     {
-        return new UserDTO(
-            name: $this->validated('name', $this->user->name),
-            email: $this->validated('email', $this->user->email),
-            password: $this->validated('password'),
-            roles: $this->validated('roles', []),
-            permissions: $this->validated('permissions', [])
-        );
+        return $this->all();
     }
 }

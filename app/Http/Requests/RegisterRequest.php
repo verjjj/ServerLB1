@@ -39,6 +39,7 @@ class RegisterRequest extends FormRequest
                 'required',
                 'same:password',
             ],
+
             'birthday' => [
                 'required',
                 'date',

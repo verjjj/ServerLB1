@@ -3,11 +3,14 @@ namespace App\Http\Controllers;
 use App\Models\ChangeLog;
 use App\DTO\ChangeLogDTO;
 use App\DTO\ChangeLogCollectionDTO;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
 use App\Models\Permission;
 use App\Models\Role;
+
+
 class ChangeLogController extends Controller
 {
     public function getUserHistory($userId): JsonResponse
@@ -22,6 +25,7 @@ class ChangeLogController extends Controller
             $logs->map(function ($log) {
                 $before = $log->before ?? [];
                 $after = $log->after ?? [];
+
                 $changedProperties = array_filter($after, function ($value, $key) use ($before) {
                     return !isset($before[$key]) || $before[$key] !== $value;
                 }, ARRAY_FILTER_USE_BOTH);
@@ -71,6 +75,7 @@ class ChangeLogController extends Controller
         $logs = ChangeLog::where('entity_type', 'Permission')
             ->where('entity_id', $permissionId)
             ->get();
+
         return response()->json(new ChangeLogCollectionDTO(
             $logs->map(function ($log) {
                 $before = $log->before ?? [];
