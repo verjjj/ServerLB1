@@ -4,13 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\DTO\Permission\PermissionDTO;
 
 class StorePermissionRequest extends FormRequest
 {
 
     public function authorize(): bool
     {
-        return $this->user()!== null && $this->user()->can('create-permission');
+        return $this->user()!== null && $this->user()->hasPermission('create-permission');
     }
 
     public function rules(): array

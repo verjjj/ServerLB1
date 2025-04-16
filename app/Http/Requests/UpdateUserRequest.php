@@ -5,12 +5,13 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use App\DTO\UserDTO;
 
 class UpdateUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('update-user');
+        return $this->user()->hasPermission('update-user');
     }
 
     public function rules(): array
@@ -26,8 +27,13 @@ class UpdateUserRequest extends FormRequest
         ];
     }
 
-    public function toDTO()
+    public function toDTO(): UserDTO
     {
-        return $this->all();
+        return new UserDTO(
+            username: $this->validated('name', $this->user->name),
+            email: $this->validated('email', $this->user->email),
+            birthday: $this->validated('birthday', []),
+            deleted_at: $this->null('deleted_at', [])
+        );
     }
 }

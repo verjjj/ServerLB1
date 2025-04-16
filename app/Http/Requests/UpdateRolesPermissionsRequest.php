@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\RolesPermissions\RolesPermissionsDTO;
+use App\DTO\RolePermissionDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -10,7 +10,7 @@ class UpdateRolesPermissionsRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('update-role-permission');
+        return $this->user()->hasPermission('update-role-permission');
     }
 
     public function rules(): array

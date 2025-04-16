@@ -17,6 +17,8 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'birthday',
+        'deleted_at'
     ];
 
     protected $hidden = [
@@ -30,6 +32,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public $timestamps = true;
 
     public function roles()
     {

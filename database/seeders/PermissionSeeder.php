@@ -16,6 +16,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Update user', 'code' => 'update-user'],
             ['name' => 'Delete user', 'code' => 'delete-user'],
             ['name' => 'Get user story', 'code' => 'get-story-user'],
+            ['name' => 'User restore', 'code' => 'restore-user'],
 
             ['name' => 'Get role list', 'code' => 'get-list-roles'],
             ['name' => 'Read role', 'code' => 'read-role'],

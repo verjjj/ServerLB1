@@ -10,7 +10,7 @@ class UpdatePermissionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user() !== null && $this->user()->can('update-permission');
+        return $this->user() !== null && $this->user()->hasPermission('update-permission');
     }
 
 
@@ -26,7 +26,7 @@ class UpdatePermissionRequest extends FormRequest
     public function toDTO(): PermissionDTO
     {
         return new PermissionDTO(
-            name: $this->validated('name', $this->permission->name),
+            name: $this->validated('name', $this->permissions->name),
             code: $this->validated('code', $this->permission->code),
             description: $this->validated('description', $this->permission->description),
         );

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\DTO\Role\RoleDTO;
 use App\DTO\Role\RoleCollectionDTO;
 use Illuminate\Http\JsonResponse;
+use App\Models\ChangeLog;
 class UserController extends Controller
 {
     public function index(): JsonResponse
@@ -128,6 +129,20 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
+
+        if (!$user->trashed()) {
+            return response()->json(['message' => 'User is not soft deleted'], 404);
+        }
+        $user->restore();
+
+        ChangeLog::create([
+            'entity_type' => 'User',
+            'entity_id' => $user->id,
+            'before' => json_encode(['deleted_at' => $user->deleted_at]),
+            'after' => json_encode(['deleted_at' => null]),
+            'action' => 'restore',
+        ]);
+
         $user->update([
             'deleted_at' => null,
             'deleted_by' => null,

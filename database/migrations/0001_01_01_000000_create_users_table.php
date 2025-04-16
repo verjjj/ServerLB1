@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->date('birthday');
+            $table->date('birthday')->default('1970-01-01');
+            $table->softDeletes();
             $table->timestamps();
         });
 

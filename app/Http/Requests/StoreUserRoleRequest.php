@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\UserRole\UserRoleDTO;
+use App\DTO\UserRoleDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -10,7 +10,7 @@ class StoreUserRoleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('assign-role');
+        return $this->user()->hasPermission('assign-role');
     }
 
     public function rules(): array

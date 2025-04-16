@@ -4,12 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\DTO\Role\RoleDTO;
 
 class UpdateRoleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('update-role');
+        return $this->user()->hasPermission('update-role');
     }
 
     public function rules(): array

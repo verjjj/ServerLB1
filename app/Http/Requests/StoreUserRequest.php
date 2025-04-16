@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-//use App\DTO\UserResourseDTO;
+use App\DTO\UserResourceDTO;
 use App\DTO\RegisterResourceDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -17,11 +17,12 @@ class StoreUserRequest extends FormRequest
 
     public function rules(): array
     {
-//        dd($this->all());
+        //dd($this->all());
         return [
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')],
             'password' => ['required', 'confirmed', Password::min(8)],
+            'birthday' => ['required', 'date'],
             'roles' => ['sometimes', 'array'],
             'roles.*' => ['integer', Rule::exists('roles', 'id')],
             'permissions' => ['sometimes', 'array'],
@@ -29,15 +30,12 @@ class StoreUserRequest extends FormRequest
         ];
     }
 
-    public function toDTO()
+    public function toDTO(): UserResourceDTO
     {
-        return $this->all();
-//        return new UserResourceDTO(
-//            username: $this->validated('name'),
-//            email: $this->validated('email'),
-//            password: $this->validated('password'),
-//            roles: $this->validated('roles', []),
-//            permissions: $this->validated('permissions', [])
-//        );
+        //return $this->all();
+        return new UserResourceDTO(
+            username: $this->validated('name'),
+            email: $this->validated('email'),
+        );
     }
 }
