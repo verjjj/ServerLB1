@@ -83,6 +83,7 @@ class ChangeLogController extends Controller
                 $changedProperties = array_filter($after, function ($value, $key) use ($before) {
                     return !isset($before[$key]) || $before[$key] !== $value;
                 }, ARRAY_FILTER_USE_BOTH);
+
                 return new ChangeLogDTO(
                     id: $log->id,
                     entityType: $log->entity_type,
@@ -137,7 +138,7 @@ class ChangeLogController extends Controller
 
 
 
-            $entity->update($beforeData);
+            $entity->delete($beforeData);
 
             ChangeLog::create([
                 'entity_type' => $entityType,

@@ -115,11 +115,23 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        $user->update([
+        $user->delete([
             'deleted_at' => now(),
             'deleted_by' => auth()->id(),
         ]);
+
+        $originalData = $user->toArray();
+
+        ChangeLog::create([
+            'entity_type' => 'User',
+            'entity_id' => $user->id,
+            'before' => json_encode($originalData),
+            'after' => json_encode(['deleted_at' => now(), 'deleted_by' => auth()->id()]),
+            'action' => 'soft-delete',
+        ]);
+
         return response()->json(['message' => 'User softly deleted']);
+
     }
     public function restore($id): JsonResponse
     {

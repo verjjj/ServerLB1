@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('entity_id');
             $table->json('before')->nullable();
             $table->json('after')->nullable();
-            $table->string('action');
+            $table->string('action')->nullable();
             $table->timestamps();
         });
     }

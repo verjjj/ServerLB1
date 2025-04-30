@@ -41,9 +41,14 @@ Route::middleware(['auth:sanctum', 'permission:no-permissions'])->group(function
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/permissions/{id}/history', [ChangeLogController::class, 'getPermissionHistory']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::delete('/users/{id}/soft', [UserController::class, 'softDelete']);
     Route::post('/users/{id}/restore', [UserController::class, 'restore']);
 });
 

@@ -66,7 +66,8 @@ class PermissionController extends Controller
         if (!$permission) {
             return response()->json(['message' => 'Permission not found'], 404);
         }
-        $permission->update($request->validated());
+        $originalData = $permission->getOriginal();
+
         return response()->json(new PermissionDTO(
             $permission->id,
             $permission->name,
