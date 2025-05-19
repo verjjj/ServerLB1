@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChangeLogController;
+use App\Http\Controllers\TwoFactorAuthController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register'])->middleware('guest');
@@ -55,4 +56,11 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logs/{id}/rollback', [ChangeLogController::class, 'restoreEntityState'])->middleware(['auth:sanctum', 'permission:restore-entity-state']);
     Route::post('/logs/{id}/rollback', [ChangeLogController::class, 'restoreEntityState']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/2fa/status', [TwoFactorAuthController::class, 'getStatus']);
+    Route::post('/2fa/request-code', [TwoFactorAuthController::class, 'requestCode']);
+    Route::post('/2fa/verify', [TwoFactorAuthController::class, 'verifyCode']);
+    Route::post('/2fa/toggle', [TwoFactorAuthController::class, 'toggleTwoFactor']);
 });

@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'two_factor' => [
+        'code_expiration' => (int) env('TWO_FACTOR_CODE_EXPIRATION', 300), // 5 minutes in seconds
+        'max_global_attempts' => 5,
+        'max_client_attempts' => 3,
+        'global_cooldown' => 50, // seconds
+        'client_cooldown' => 30, // seconds
+    ],
+
 ];
