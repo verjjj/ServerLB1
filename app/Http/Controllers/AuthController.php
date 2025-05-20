@@ -23,9 +23,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        // Check if 2FA is enabled
+        // 2fa
         if ($user->twoFactorAuth && $user->twoFactorAuth->is_enabled) {
-            // Generate temporary token for 2FA verification
             $tempToken = $user->createToken('2fa_temp_token', ['verify-2fa'])->plainTextToken;
             return response()->json([
                 'message' => '2FA verification required',

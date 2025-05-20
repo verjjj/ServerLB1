@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('two_factor_auths', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('code')->nullable(); // Код 2FA
-            $table->timestamp('code_expires_at')->nullable(); // Время истечения кода
-            $table->boolean('is_enabled')->default(false); // Статус 2FA
-            $table->string('client_identifier')->nullable(); // Идентификатор клиента (IP или браузер)
+            $table->string('code')->nullable(); 
+            $table->timestamp('code_expires_at')->nullable(); 
+            $table->boolean('is_enabled')->default(false); 
+            $table->string('client_identifier')->nullable();
             $table->timestamps();
         });
     }

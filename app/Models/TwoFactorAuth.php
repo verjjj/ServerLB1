@@ -13,7 +13,7 @@ class TwoFactorAuth extends Model
         'user_id',
         'code',
         'code_expires_at',
-        'client_identifier', // Разрешаем массовое назначение
+        'client_identifier', 
         'is_enabled',
     ];
 
