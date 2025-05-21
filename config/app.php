@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'git_webhook_secret' => env('GIT_WEBHOOK_SECRET'),
+
 ];

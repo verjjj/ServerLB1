@@ -7,6 +7,9 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\TwoFactorAuthController;
+use App\Http\Controllers\GitWebhookController;
+
+Route::post('/hooks/git', [GitWebhookController::class, 'handle'])->name('hooks.git');
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register'])->middleware('guest');
@@ -64,3 +67,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/2fa/verify', [TwoFactorAuthController::class, 'verifyCode']);
     Route::post('/2fa/toggle', [TwoFactorAuthController::class, 'toggleTwoFactor']);
 });
+
+
