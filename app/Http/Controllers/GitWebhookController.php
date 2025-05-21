@@ -33,10 +33,10 @@ class GitWebhookController extends Controller
             // Логируем IP-адрес
             Log::info('Started update with IP: ' . $request->ip());
 
-            // Выполняем git команды
-            $this->runCommand('git reset --hard');
-            $this->runCommand('git checkout main');
-            $this->runCommand('git pull origin main');
+//            // Выполняем git команды
+//            $this->runCommand('git reset --hard');
+//            $this->runCommand('git checkout main');
+//            $this->runCommand('git pull origin main');
 
             return response()->json([
                 'message' => 'Project updated successfully'
@@ -60,7 +60,7 @@ class GitWebhookController extends Controller
     private function runCommand($command)
     {
         exec($command . ' 2>&1', $output, $code);
-        
+
         if ($code !== 0) {
             throw new \Exception(implode("\n", $output));
         }
