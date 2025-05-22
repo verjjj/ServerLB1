@@ -10,12 +10,10 @@ use App\DTO\LogRequestCollectionDto;
 
 class LogRequestController extends Controller
 {
-    // Получить список логов с фильтрацией, сортировкой, пагинацией
     public function index(Request $request)
     {
         $query = LogRequest::query();
 
-        // Фильтрация
         if ($filters = $request->input('filter')) {
             foreach ($filters as $filter) {
                 if (!isset($filter['key'], $filter['value'])) continue;
@@ -33,7 +31,6 @@ class LogRequestController extends Controller
             }
         }
 
-        // Сортировка
         if ($sorts = $request->input('sortBy')) {
             foreach ($sorts as $sort) {
                 if (!isset($sort['key'], $sort['order'])) continue;
@@ -43,12 +40,10 @@ class LogRequestController extends Controller
             $query->orderByDesc('called_at');
         }
 
-        // Пагинация
         $perPage = (int)($request->input('count', 10));
         $page = (int)($request->input('page', 1));
         $paginator = $query->paginate($perPage, ['*'], 'page', $page);
 
-        // Сокращённая информация
         $items = [];
         foreach ($paginator->items() as $log) {
             $items[] = [
@@ -70,7 +65,6 @@ class LogRequestController extends Controller
         ]);
     }
 
-    // Получить полный лог по id
     public function show($id)
     {
         $log = LogRequest::findOrFail($id);

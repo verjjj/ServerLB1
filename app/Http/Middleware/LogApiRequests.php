@@ -19,7 +19,7 @@ class LogApiRequests
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Не логируем сами логи, чтобы не было рекурсии
+        //пропускаем логи, чтобы не было рекурсии
         if ($request->is('logs-requests*')) {
             return $next($request);
         }

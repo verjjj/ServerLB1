@@ -29,8 +29,11 @@ class GitWebhookController extends Controller
             Log::info('Started update with IP: ' . $request->ip());
 
 //            $this->runCommand('git reset --hard');
+//            Log::info("Discarded all changes");
 //            $this->runCommand('git checkout main');
+//            Log::info("Switched to main branch");
 //            $this->runCommand('git pull origin main');
+//            Log::info("Pulled latest changes from repository");
 
             return response()->json([
                 'message' => 'Project updated successfully'

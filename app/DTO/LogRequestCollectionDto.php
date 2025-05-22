@@ -19,4 +19,4 @@ class LogRequestCollectionDto
         $this->currentPage = $currentPage;
         $this->lastPage = $lastPage;
     }
-} 
+}
