@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 
 class GitWebhookController extends Controller
 {
-    // Путь к файлу блокировки
     private $lockFile = 'update.lock';
 
     public function handle(Request $request)
@@ -19,21 +18,17 @@ class GitWebhookController extends Controller
             ], 423);
         }
 
-        // Создаем файл блокировки
         file_put_contents($this->getLockPath(), date('Y-m-d H:i:s'));
 
         try {
-            // Проверяем секретный ключ
             if ($request->input('secret_key') !== config('app.git_webhook_secret')) {
                 return response()->json([
                     'message' => 'Invalid secret key.'
                 ], 403);
             }
 
-            // Логируем IP-адрес
             Log::info('Started update with IP: ' . $request->ip());
 
-//            // Выполняем git команды
 //            $this->runCommand('git reset --hard');
 //            $this->runCommand('git checkout main');
 //            $this->runCommand('git pull origin main');
@@ -49,14 +44,12 @@ class GitWebhookController extends Controller
             ], 500);
 
         } finally {
-            // Удаляем файл блокировки в любом случае
             if (file_exists($this->getLockPath())) {
                 unlink($this->getLockPath());
             }
         }
     }
 
-    // Выполняет команду и проверяет результат
     private function runCommand($command)
     {
         exec($command . ' 2>&1', $output, $code);
@@ -68,7 +61,6 @@ class GitWebhookController extends Controller
         Log::info('Выполнено: ' . $command);
     }
 
-    // Получает полный путь к файлу блокировки
     private function getLockPath()
     {
         return storage_path('app/' . $this->lockFile);
