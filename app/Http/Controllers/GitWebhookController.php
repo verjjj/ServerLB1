@@ -11,7 +11,6 @@ class GitWebhookController extends Controller
 
     public function handle(Request $request)
     {
-        // Проверяем, не идет ли уже обновление
         if (file_exists($this->getLockPath())) {
             return response()->json([
                 'message' => 'Update is already in progress.'
@@ -29,9 +28,12 @@ class GitWebhookController extends Controller
 
             Log::info('Started update with IP: ' . $request->ip());
 
-//            $this->runCommand('git reset --hard');
-//            $this->runCommand('git checkout main');
-//            $this->runCommand('git pull origin main');
+            $this->runCommand('git reset --hard');
+            Log::info("Discarded all changes");
+            $this->runCommand('git checkout main');
+            Log::info("Switched to main branch");
+            $this->runCommand('git pull origin main');
+            Log::info("Pulled latest changes from repository");
 
             return response()->json([
                 'message' => 'Project updated successfully'
