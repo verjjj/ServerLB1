@@ -35,6 +35,10 @@ class PermissionSeeder extends Seeder
             ['name' => 'Restore entity state', 'code' => 'restore-entity-state'],
 
             ['name' => 'No permissions', 'code' => 'no-permissions'],
+
+            ['name' => 'View logs', 'code' => 'view-logs'],
+            ['name' => 'View logs-requests list', 'code' => 'view-logs-requests-list'],
+            ['name' => 'View logs-requests details', 'code' => 'view-logs-requests-details'],
         ];
 
         foreach ($permissions as $permission) {

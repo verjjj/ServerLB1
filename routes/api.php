@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\GitWebhookController;
+use App\Http\Controllers\Api\LogRequestController;
 
 Route::post('/hooks/git', [GitWebhookController::class, 'handle'])->name('hooks.git');
 
@@ -24,23 +25,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/login-with-role', [AuthController::class, 'loginWithRole']);
 
-Route::middleware(['auth:sanctum', 'permission:get-list-roles'])->group(function () {
+Route::middleware(['auth:sanctum', 'permissions:get-list-roles'])->group(function () {
     Route::get('/roles', [RoleController::class, 'index']);
 });
 
-// Route::apiResource('/roles', RoleController::class)->middleware(['auth:sanctum', 'permission:manage-roles']);
+// Route::apiResource('/roles', RoleController::class)->middleware(['auth:sanctum', 'permissions:manage-roles']);
 
 Route::apiResource('/permissions', PermissionController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/permissions/{id}/restore', [PermissionController::class, 'restore'])
-        ->middleware('permission:restore-permission');
+        ->middleware('permissions:restore-permission');
 
     Route::delete('/permissions/{id}/force-delete', [PermissionController::class, 'forceDelete'])
-        ->middleware('permission:force-delete-permission');
+        ->middleware('permissions:force-delete-permission');
 });
 
-Route::middleware(['auth:sanctum', 'permission:no-permissions'])->group(function () {
+Route::middleware(['auth:sanctum', 'permissions:no-permissions'])->group(function () {
     Route::get('/restricted', [PermissionController::class, 'restricted']);
 });
 
@@ -57,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logs/{id}/rollback', [ChangeLogController::class, 'restoreEntityState'])->middleware(['auth:sanctum', 'permission:restore-entity-state']);
+    Route::post('/logs/{id}/rollback', [ChangeLogController::class, 'restoreEntityState'])->middleware(['auth:sanctum', 'permissions:restore-entity-state']);
     Route::post('/logs/{id}/rollback', [ChangeLogController::class, 'restoreEntityState']);
 });
 
@@ -66,6 +67,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/2fa/request-code', [TwoFactorAuthController::class, 'requestCode']);
     Route::post('/2fa/verify', [TwoFactorAuthController::class, 'verifyCode']);
     Route::post('/2fa/toggle', [TwoFactorAuthController::class, 'toggleTwoFactor']);
+});
+
+Route::middleware(['auth:sanctum', 'permissions:view-logs'])->group(function () {
+    Route::get('/logs-requests', [LogRequestController::class, 'index']);
+    Route::get('/logs-requests/{id}', [LogRequestController::class, 'show']);
 });
 
 
