@@ -42,13 +42,19 @@ class LogApiRequests
             }
         }
 
+        // Exclude logging request body for file uploads
+        $requestBody = null;
+        if (!$request->isMethod('POST') || !$request->is('api/photos')) {
+             $requestBody = $request->getContent();
+        }
+
         // Сохраняем лог
         LogRequest::create([
             'full_url' => $request->fullUrl(),
             'http_method' => $request->method(),
             'controller_path' => $controllerPath,
             'controller_method' => $controllerMethod,
-            'request_body' => $request->getContent(),
+            'request_body' => $requestBody,
             'request_headers' => json_encode($request->headers->all()),
             'user_id' => Auth::id(),
             'ip_address' => $request->ip(),

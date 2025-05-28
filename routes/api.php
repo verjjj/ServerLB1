@@ -10,6 +10,7 @@ use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\GitWebhookController;
 use App\Http\Controllers\Api\LogRequestController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\FileController;
 
 Route::post('/hooks/git', [GitWebhookController::class, 'handle'])->name('hooks.git');
 
@@ -22,6 +23,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/tokens', [AuthController::class, 'tokens']);
     Route::post('/auth/out_all', [AuthController::class, 'logoutAll']);
     Route::post('/auth/change_password', [AuthController::class, 'changePassword']);
+    
+    // File routes
+    Route::post('/photos', [FileController::class, 'uploadPhoto']);
+    Route::delete('/photos', [FileController::class, 'deletePhoto']);
+    Route::get('/photos/{file}/download', [FileController::class, 'downloadPhoto']);
+    Route::get('/photos/{file}/avatar', [FileController::class, 'downloadAvatar']);
+    
+    // Admin only routes
+    Route::middleware('admin')->group(function () {
+        Route::get('/photos/archive', [FileController::class, 'downloadPhotosArchive']);
+    });
 });
 
 Route::post('/login-with-role', [AuthController::class, 'loginWithRole']);

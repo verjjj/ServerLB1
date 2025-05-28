@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'birthday',
+        'photo_id',
     ];
 
     protected $dates = ['deleted_at'];
@@ -93,5 +94,10 @@ class User extends Authenticatable
     public function logRequests()
     {
         return $this->hasMany(LogRequest::class, 'user_id');
+    }
+
+    public function photo()
+    {
+        return $this->belongsTo(File::class, 'photo_id');
     }
 }
