@@ -89,4 +89,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(TwoFactorAuth::class);
     }
+
+    public function logRequests()
+    {
+        return $this->hasMany(LogRequest::class, 'user_id');
+    }
 }

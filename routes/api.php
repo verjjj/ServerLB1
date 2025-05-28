@@ -9,6 +9,7 @@ use App\Http\Controllers\ChangeLogController;
 use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\GitWebhookController;
 use App\Http\Controllers\Api\LogRequestController;
+use App\Http\Controllers\ReportController;
 
 Route::post('/hooks/git', [GitWebhookController::class, 'handle'])->name('hooks.git');
 
@@ -73,5 +74,9 @@ Route::middleware(['auth:sanctum', 'permissions:view-logs'])->group(function () 
     Route::get('/logs-requests', [LogRequestController::class, 'index']);
     Route::get('/logs-requests/{id}', [LogRequestController::class, 'show']);
 });
+
+//Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/report/generate', [ReportController::class, 'generateAndSendReport'])->name('report.generate');
+//});
 
 

@@ -39,10 +39,15 @@ class PermissionSeeder extends Seeder
             ['name' => 'View logs', 'code' => 'view-logs'],
             ['name' => 'View logs-requests list', 'code' => 'view-logs-requests-list'],
             ['name' => 'View logs-requests details', 'code' => 'view-logs-requests-details'],
+
+            ['name' => 'Administrator access', 'code' => 'admin-access'],
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create($permission);
+            Permission::updateOrCreate(
+                ['code' => $permission['code']],
+                $permission
+            );
         }
     }
 }
