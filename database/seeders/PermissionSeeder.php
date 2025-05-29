@@ -41,6 +41,11 @@ class PermissionSeeder extends Seeder
             ['name' => 'View logs-requests details', 'code' => 'view-logs-requests-details'],
 
             ['name' => 'Administrator access', 'code' => 'admin-access'],
+
+            ['name' => 'Export users', 'code' => 'export-users'],
+            ['name' => 'Import users', 'code' => 'import-users'],
+            ['name' => 'Export permissions', 'code' => 'export-permissions'],
+            ['name' => 'Import permissions', 'code' => 'import-permissions'],
         ];
 
         foreach ($permissions as $permission) {

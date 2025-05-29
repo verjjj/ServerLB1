@@ -10,6 +10,8 @@ use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\GitWebhookController;
 use App\Http\Controllers\Api\LogRequestController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ImportController;
 
 Route::post('/hooks/git', [GitWebhookController::class, 'handle'])->name('hooks.git');
 
@@ -78,5 +80,14 @@ Route::middleware(['auth:sanctum', 'permissions:view-logs'])->group(function () 
 //Route::middleware('auth:sanctum')->group(function () {
     Route::post('/report/generate', [ReportController::class, 'generateAndSendReport'])->name('report.generate');
 //});
+
+// Export routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/export/users', [ExportController::class, 'exportUsers']);
+    Route::get('/export/permissions', [ExportController::class, 'exportPermissions']);
+    
+    Route::post('/import/users', [ImportController::class, 'importUsers']);
+    Route::post('/import/permissions', [ImportController::class, 'importPermissions']);
+});
 
 
