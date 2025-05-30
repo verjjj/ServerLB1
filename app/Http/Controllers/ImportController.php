@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+
 
 class ImportController extends Controller
 {
@@ -34,27 +36,16 @@ class ImportController extends Controller
         $file = $request->file('file');
         $path = $file->store('imports');
 
-        if (!Storage::exists($path)) {
-            return response()->json([
-                'message' => 'File not saved!',
-                'path' => storage_path('app/' . $path)
-            ], 500);
-        }
-
-
-        $columns = [
-            'id',
-            'username',
-            'email',
-            'birthday',
-        ];
+        $columns = Schema::getColumnListing('users');
+        $allowedColumns = ['id', 'username', 'email', 'birthday'];
+        $columns = array_intersect($columns, $allowedColumns);
 
         try {
             $absolutePath = Storage::path($path);
             $normalizedPath = str_replace('/', DIRECTORY_SEPARATOR, $absolutePath);
-            
+
             Log::info('Attempting to import file from path: ' . $normalizedPath);
-            
+
             $results = $this->excelService->import(
                 $normalizedPath,
                 User::class,
@@ -93,12 +84,9 @@ class ImportController extends Controller
         $file = $request->file('file');
         $path = $file->store('imports');
 
-        $columns = [
-            'id',
-            'name',
-            'code',
-            'description',
-        ];
+        $columns = Schema::getColumnListing('permissions');
+        $allowedColumns = ['id', 'name', 'code', 'description'];
+        $columns = array_intersect($columns, $allowedColumns);
 
         try {
             $absolutePath = Storage::path($path);

@@ -85,7 +85,6 @@ Route::middleware(['auth:sanctum', 'permissions:view-logs'])->group(function () 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/export/users', [ExportController::class, 'exportUsers']);
     Route::get('/export/permissions', [ExportController::class, 'exportPermissions']);
-    
     Route::post('/import/users', [ImportController::class, 'importUsers']);
     Route::post('/import/permissions', [ImportController::class, 'importPermissions']);
 });

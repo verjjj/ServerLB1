@@ -28,14 +28,12 @@ class ExcelService
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Set headers
         $column = 1;
         foreach ($columns as $header) {
             $sheet->setCellValue($sheet->getCell([$column, 1])->getCoordinate(), $header);
             $column++;
         }
 
-        // Set data
         $row = 2;
         foreach ($data as $item) {
             $column = 1;
@@ -46,7 +44,6 @@ class ExcelService
             $row++;
         }
 
-        // Save file
         $writer = new Xlsx($spreadsheet);
         $path = storage_path('app/public/exports/' . $filename);
         $writer->save($path);
@@ -74,7 +71,6 @@ class ExcelService
         $worksheet = $spreadsheet->getActiveSheet();
         $rows = $worksheet->toArray();
 
-        // Remove header row
         array_shift($rows);
 
         $results = [
@@ -86,7 +82,7 @@ class ExcelService
 
         try {
             foreach ($rows as $index => $row) {
-                $rowNumber = $index + 2; // +2 because we removed header and array is 0-based
+                $rowNumber = $index + 2;
                 $data = array_combine($columns, $row);
 
                 try {
@@ -102,7 +98,6 @@ class ExcelService
                             'message' => "Record #{$rowNumber} successfully added with ID #{$model->id}"
                         ];
                     } else {
-                        // Overwrite mode
                         $model = $modelClass::where('id', $data['id'])->first();
                         if ($model) {
                             foreach ($data as $key => $value) {
@@ -129,7 +124,7 @@ class ExcelService
                     }
                 } catch (\Exception $e) {
                     $errorMessage = "Record #{$rowNumber} failed to add/update. Unknown error.";
-                    
+
                     // Check for duplicate entry
                     if (str_contains($e->getMessage(), 'Duplicate entry')) {
                         $errorMessage = "Record #{$rowNumber} contains duplicate data";
@@ -163,4 +158,4 @@ class ExcelService
 
         return $results;
     }
-} 
+}
