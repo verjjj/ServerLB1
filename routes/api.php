@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\LogRequestController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\AttendanceController;
 
 Route::post('/hooks/git', [GitWebhookController::class, 'handle'])->name('hooks.git');
 
@@ -88,5 +89,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/import/users', [ImportController::class, 'importUsers']);
     Route::post('/import/permissions', [ImportController::class, 'importPermissions']);
 });
+
+Route::post('/attendance/process', [AttendanceController::class, 'processAttendance']);
 
 
