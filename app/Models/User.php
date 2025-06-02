@@ -94,4 +94,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(LogRequest::class, 'user_id');
     }
+
+    public function file()
+    {
+        return $this->hasOne(File::class);
+    }
 }

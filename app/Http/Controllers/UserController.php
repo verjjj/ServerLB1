@@ -27,7 +27,8 @@ class UserController extends Controller
                         'id' => $role->id,
                         'name' => $role->name,
                         'code' => $role->code,
-                    ])
+                    ])->toArray(),
+                    avatar_url: $user->avatar_url
                 );
             })
         ));
@@ -48,7 +49,8 @@ class UserController extends Controller
             $user->username,
             $user->email,
             $user->birthday,
-            []
+            roles: [],
+                avatar_url: $user->avatar_url
         ), 201);
     }
     public function show($id): JsonResponse
@@ -69,7 +71,8 @@ class UserController extends Controller
                 'id' => $role->id,
                 'name' => $role->name,
                 'code' => $role->code,
-            ])->toArray()
+            ])->toArray(),
+            avatar_url: $user->avatar_url
         ));
     }
     public function update(UpdateUserRequest $request, $id): JsonResponse
@@ -91,7 +94,8 @@ class UserController extends Controller
                 'id' => $role->id,
                 'name' => $role->name,
                 'code' => $role->code,
-            ])->toArray()
+            ])->toArray(),
+            avatar_url: $user->avatar_url
         ));
     }
     public function destroy($userId): JsonResponse

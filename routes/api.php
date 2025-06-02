@@ -10,6 +10,7 @@ use App\Http\Controllers\TwoFactorAuthController;
 use App\Http\Controllers\GitWebhookController;
 use App\Http\Controllers\Api\LogRequestController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\FileController;
 
 Route::post('/hooks/git', [GitWebhookController::class, 'handle'])->name('hooks.git');
 
@@ -79,4 +80,10 @@ Route::middleware(['auth:sanctum', 'permissions:view-logs'])->group(function () 
     Route::post('/report/generate', [ReportController::class, 'generateAndSendReport'])->name('report.generate');
 //});
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/user/photo/upload', [FileController::class, 'uploadPhoto']);
+    Route::delete('/user/photo/delete', [FileController::class, 'deletePhoto']);
+    Route::get('/user/photo/download', [FileController::class, 'downloadPhoto']);
+    Route::post('/export/photos', [FileController::class, 'exportPhotos'])->name('export.photos');
+});
 

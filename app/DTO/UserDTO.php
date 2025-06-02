@@ -32,6 +32,7 @@ class UserDTO
             'email' => $this->email,
             'birthday' => $this->birthday,
             'deleted_at' => $this->deleted_at,
+            'avatar_url' => $this->avatar_url,
         ];
     }
 }
