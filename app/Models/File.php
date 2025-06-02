@@ -16,7 +16,9 @@ class File extends Model
         'format',
         'size',
         'path',
-        'data'
+        'data',
+        'original_name',
+        'mime_type'
     ];
 
     protected $casts = [
@@ -27,5 +29,11 @@ class File extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'photo_id');
+    }
+
+    public function getAvatarPath()
+    {
+        $pathInfo = pathinfo($this->path);
+        return $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '_avatar.' . $pathInfo['extension'];
     }
 }

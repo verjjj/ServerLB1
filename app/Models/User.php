@@ -38,6 +38,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'avatar_url'
+    ];
+
     public $timestamps = true;
 
     public function roles(): BelongsToMany
@@ -99,5 +103,13 @@ class User extends Authenticatable
     public function photo()
     {
         return $this->belongsTo(File::class, 'photo_id');
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        if (!$this->photo) {
+            return null;
+        }
+        return route('files.avatar', $this->photo->id);
     }
 }

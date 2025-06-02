@@ -25,14 +25,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/change_password', [AuthController::class, 'changePassword']);
     
     // File routes
-    Route::post('/photos', [FileController::class, 'uploadPhoto']);
-    Route::delete('/photos', [FileController::class, 'deletePhoto']);
-    Route::get('/photos/{file}/download', [FileController::class, 'downloadPhoto']);
-    Route::get('/photos/{file}/avatar', [FileController::class, 'downloadAvatar']);
+    Route::post('/files/photo', [FileController::class, 'uploadPhoto']);
+    Route::delete('/files/photo', [FileController::class, 'deletePhoto']);
+    Route::get('/files/{file}/download', [FileController::class, 'downloadPhoto'])->name('files.download');
+    Route::get('/files/{file}/avatar', [FileController::class, 'getAvatar'])->name('files.avatar');
     
     // Admin only routes
-    Route::middleware('admin')->group(function () {
-        Route::get('/photos/archive', [FileController::class, 'downloadPhotosArchive']);
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/files/photos/archive', [FileController::class, 'downloadPhotosArchive']);
     });
 });
 
